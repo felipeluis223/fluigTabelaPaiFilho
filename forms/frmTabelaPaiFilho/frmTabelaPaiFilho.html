@@ -1,0 +1,238 @@
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/style-guide/css/fluig-style-guide.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="anexos.css" />
+    <script type="text/javascript" src="/portal/resources/js/jquery/jquery.js"></script>
+    <script type="text/javascript" src="/portal/resources/js/jquery/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/portal/resources/js/mustache/mustache-min.js"></script>
+    <script type="text/javascript" src="/style-guide/js/fluig-style-guide.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript" src="anexos.js"></script>
+    <script type="text/javascript" src="/webdesk/vcXMLRPC.js"></script>
+    <script type="text/javascript" src="/resources/js/utils.js"></script>
+  </head>
+
+  <body>
+    <div class="fluig-style-guide">
+      <form name="form" role="form">
+
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            <h3 class="panel-title">Fluxo de Televendas</h3>
+          </div>
+
+          <div class="panel-body">
+            <div class="row">
+              <div class="form-group col-md-2 col-sm-6 col-xs-12">
+                <label>Solicitante:</label>
+                <input type="text" class="form-control" name="nome_solicitante" id="nome_solicitante" readonly />
+              </div>
+
+              <div class="form-group col-md-2 col-sm-6 col-xs-12">
+                <label>Data:</label>
+                <input type="text" class="form-control" name="dt_solicitante" id="dt_solicitante" readonly />
+              </div>
+            </div>
+
+            <div class="row">
+              <hr class="separador_vermelho" />
+              <h2 class="titulo">Solicitante:</h2>
+
+              <div class="form-group col-md-3 col-sm-2 col-xs-12">
+                <label>Data da venda:</label>
+                <input type="date" class="form-control" name="dt_venda" id="dt_venda" />
+              </div>
+
+              <div class="form-group col-md-3 col-sm-2 col-xs-12">
+                <label>Valor da venda:</label>
+                <input type="number" class="form-control" name="valor_venda" id="valor_venda" />
+              </div>
+
+              <div class="div_modo_pg form-group col-md-3 col-sm-6 col-xs-12">
+                <label>Modo de pagamento:</label>
+                <select class="form-control" name="modo_pg" id="modo_pg">
+                  <option value=""></option>
+                  <option value="C">Crédito</option>
+                  <option value="D">Débito</option>
+                  <option value="P">Pix</option>
+                </select>
+              </div>
+
+              <div class="div_loja form-group col-md-3 col-sm-6 col-xs-12">
+                <label>Loja:</label>
+                <select class="form-control" name="loja" id="loja">
+                  <option value=""></option>
+                  <option value="one">Loja 01</option>
+                  <option value="two">Loja 02</option>
+                  <option value="three">Loja 03</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- NOVO -->
+            <div class="row fs-overflow-x-auto" id="div_criar_usuario">
+              <hr class="separador_vermelho" />
+              <div>
+                <h2 class="usuario">Formulário para solicitação:</h2>
+              </div>
+
+              <table class="table table-bordered" id="tbitens" tablename="tbitens" noaddbutton="true" nodeletebutton="false" style="table-layout: fixed; width: 100%;">
+                <thead>
+                  <tr id="tr_cabecalho">
+                    <th style="text-align: center;">Matrícula:</th>
+                    <th style="text-align: center;">Nome:</th>
+                    <th style="text-align: center;">Cargo:</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr detail="true" detailname="tbitens" class="bloco-itens-requisicao">
+                    <td>
+                      <div class="form-group" id="div_matricula">
+                        <input type="text" class="form-control" name="matricula" id="matricula" onchange="prencherAutomatico(this);">
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group" id="div_nome">
+                        <input type="text" class="form-control" name="nome" id="nome" readonly>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group" id="div_cargo">
+                        <input type="text" class="form-control" name="cargo" id="cargo" readonly>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <button type="button" class="btn btn-primary" id="addActivityButton" data-toggle="button" onclick="addTask()">Adicionar Funcionário</button>
+            </div>
+
+            <div class="row">
+              <div id="div_obs" class="form-group col-xs-12">
+                <label>Observações:</label>
+                <textarea class="form-control" style="resize: vertical" name="obs" id="obs" rows="3"></textarea>
+              </div>
+            </div>
+
+            <!-- Confirmação de pagamento -->
+            <div class="row" id="div_conf_pagamento" style="display: none">
+              <hr class="separador_vermelho" />
+              <h2 class="titulo">Confirmação de pagamento:</h2>
+
+              <div class="div_status_1 form-group col-md-3 col-sm-6 col-xs-12">
+                <label>Pagamento efetuado?</label>
+                <select class="form-control" name="status_1" id="status_1">
+                  <option value=""></option>
+                  <option value="S">Sim</option>
+                  <option value="N">Não</option>
+                </select>
+              </div>
+
+              <div class="row" id="div_comprovante" style="display:none">
+                <div class="form-group col-md-3 col-sm-6 col-xs-12">
+                  <label>Anexar comprovante:</label>
+                  <div class="componentAnexo">
+                    <div class="input-group">
+                      <input type="hidden" class="descAnexo" name="fdAnexo" id="fdAnexo" value="Anexo" />
+                      <input type="text" id="fnAnexo" name="fnAnexo" class="form-control inputAnexo input-sm" placeholder="Selecione um arquivo" readonly />
+                    </div>
+                    <div class="icones">
+                      <button type="button" class="btnUpFile btn btn-success btn-sm" data-acao="upload" onclick="anexo(event)" title="Selecionar">
+                        <i class="fluigicon fluigicon-file-upload icon-sm"></i>
+                      </button>
+                      <button style="display: none" type="button" class="btnViewerFile btn btn-info btn-sm" data-acao="viewer" onclick="anexo(event)" title="Visualizar" disabled>
+                        <i class="fluigicon fluigicon-eye-open icon-sm"></i>
+                      </button>
+                      <button style="display: none" type="button" class="btnDownloadFile btn btn-info btn-sm" data-acao="download" onclick="anexo(event)" title="Download" disabled>
+                        <i class="fluigicon fluigicon-download icon-sm"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="div_justificativa" class="form-group col-xs-12" style="display:none">
+                <label>Justificativa:</label>
+                <textarea class="form-control" style="resize: vertical" name="justificativa" id="justificativa" rows="3"></textarea>
+              </div>
+            </div>
+            <!-- Final da confirmação de pagamento -->
+
+            <!-- Verificacao solicitante -->
+            <div class="row" id="div_verificacao_solic" style="display: none">
+              <hr class="separador_vermelho" />
+              <h2 class="titulo">Verificação:</h2>
+              <label>
+                <input type="checkbox" id="verificado" name="verificado" />
+                Verificado
+              </label>
+            </div>
+            <!-- Final da verificacao -->
+          </div>
+        </div>
+      </form>
+    </div>
+  </body>
+
+  <script>
+    $(document).ready(function () {
+      console.log(modoVisualizacao);
+      console.log(typeof modoVisualizacao);
+
+      if (modoVisualizacao == "VIEW") {
+        $("#addActivityButton").hide();
+      }
+
+      if ((atividade == 3 || atividade == 10 || atividade == 6 || atividade == 8) && modoVisualizacao == "MOD") {
+        $(".bpm-mobile-trash-column").hide();
+        $("#tr_cabecalho").children().each(function (count, th) {
+          if (count == 0) {
+            $(this).hide();
+          }
+        });
+      }
+
+      $('#status_1').change(function () {
+        const status = $(this).val();
+        $('#div_comprovante').toggle(status === 'S');
+        $('#div_justificativa').toggle(status === 'N');
+      });
+
+      $('#status_1').trigger('change');
+    });
+
+    function addTask() {
+      wdkAddChild('tbitens');
+    }
+
+    function prencherAutomatico(item) {
+      const index = item.id.split("___")[1];
+      const matricula = $("#matricula___" + index).val().trim();
+
+      if (!matricula) {
+        $("#nome___" + index).val("");
+        $("#cargo___" + index).val("");
+        return;
+      }
+
+      const c1 = DatasetFactory.createConstraint("MATRICULA", matricula, matricula, ConstraintType.MUST);
+      const dataset = DatasetFactory.getDataset("ds_matricula_func_teste", null, [c1], null);
+
+      if (dataset && dataset.values && dataset.values.length > 0) {
+        const result = dataset.values[0];
+        $("#nome___" + index).val(result.NOME || "");
+        $("#cargo___" + index).val(result.CARGO || "");
+      } else {
+        FLUIGC.toast({
+          title: 'Atenção:',
+          message: 'Matrícula não encontrada.',
+          type: 'warning'
+        });
+        $("#nome___" + index).val("");
+        $("#cargo___" + index).val("");
+      }
+    }
+  </script>
+</html>

@@ -1,0 +1,146 @@
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href="/style-guide/css/fluig-style-guide.min.css" />
+    <script type="text/javascript" src="/portal/resources/js/jquery/jquery.js"></script>
+    <script type="text/javascript" src="/portal/resources/js/jquery/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/portal/resources/js/mustache/mustache-min.js"></script>
+    <script type="text/javascript" src="/style-guide/js/fluig-style-guide.min.js" charset="utf-8"></script>
+    <script src="https://use.fontawesome.com/62e43a72a9.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+    <meta charset="UTF-8">
+</head>
+
+<style>
+    div.panel div.panel-heading {
+        background-color: #ed3237 !important;
+        color: #fff !important;
+        border: 1px solid #ed3237 !important;
+    }
+
+    div.panel {
+        border: none !important;
+    }
+
+    div.panel div.panel-body {
+        border: 1px solid #ed3237 !important;
+    }
+
+    .separador_vermelho {
+        border-color: #ed3237 !important;
+    }
+
+    .usuario {
+        margin-left: 12px;
+        margin-top: 0px !important;
+        padding-bottom: 16px;
+    }
+
+    .btn.btn-primary {
+        margin-bottom: 20px !important;
+    }
+
+    #div_motivo {
+        margin-top: 20px;
+    }
+</style>
+
+<body>
+<div class="fluig-style-guide">
+    <form name="form" role="form">
+        <input type="hidden" name="retorna_login_gerente" id="retorna_login_gerente" />
+        <input type="hidden" name="numero_loja" id="numero_loja" />
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Despesas de Entrega</h3>
+            </div>
+
+            <div class="panel-body">
+                <div class="row margin-espaco">
+                    <div class="form-group col-md-3 col-sm-6 col-xs-12">
+                        <label>Solicitante:</label>
+                        <input type="text" class="form-control" name="nome_solicitante" id="nome_solicitante" readonly/>
+                    </div>
+
+                    <div class="form-group col-md-3 col-sm-6 col-xs-12">
+                        <label>Data:</label>
+                        <input type="text" class="form-control" name="dt_solicitante" id="dt_solicitante" readonly/>
+                    </div>
+
+                    <div class="form-group col-md-3 col-sm-6 col-xs-12">
+                        <label>Loja:</label>
+                        <select class="form-control" name="loja_atual" id="loja_atual" dataset="ds_gerentes_regional"
+                                datasetkey="loja" datasetvalue="loja"></select>
+                    </div>
+                </div>
+
+                <!-- tabela de entregas -->
+                <div class="row fs-overflow-x-auto" id="div_ultimo_feriado">
+                    <div class="form-group col-md-3 col-sm-6 col-xs-12"></div>
+
+                    <table class="table table-bordered" id="tbitens" tablename="tbitens" noaddbutton="true"
+                        nodeletebutton="false" style="table-layout: fixed;">
+                        <thead>
+                            <tr class="tr_cabecalho">
+                                <th style="text-align: center;">Tipos de entrega</th>
+                                <th style="text-align: center;">Quantidade</th>
+                                <th style="text-align: center;">Valor Unitário(R$)</th>
+                                <th style="text-align: center;">Valor Total (R$)</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr detail="true" detailname="tbitens" class="bloco-itens-feriados">
+                                <td>
+                                    <div class="form-group">
+                                        <select class="form-control" name="trabalhou">
+                                            <option value=""></option>
+                                            <option value="C">Cortesia</option>
+                                            <option value="E">Ecommerce</option>
+                                            <option value="M">Manual</option>
+                                            <option value="P">Pago pelo cliente</option>
+                                            <option value="R">Rural</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="number" class="form-control" name="quantidade">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="number" class="form-control" name="valorUnitario" step="0.01">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="total" readonly>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <button type="button" class="btn btn-primary" id="addActivityButton" onclick="adicionarEntregaLinha()">Adicionar Item</button>
+                </div>
+
+                <!-- Campo de valor total de todas as entregas -->
+                <div class="form-group" style="margin-top: 20px;">
+                    <label for="total_geral">Valor Total de Todas as Entregas (R$):</label>
+                    <input type="text" class="form-control" id="total_geral" name="total_geral" readonly>
+                </div>
+
+                <!-- Observações -->
+                <div class="row" id="div_obs_solic">
+                    <div class="form-group col-12">
+                        <label>Observações:</label>
+                        <textarea class="form-control" name="obs_solic" id="obs_solic" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>
