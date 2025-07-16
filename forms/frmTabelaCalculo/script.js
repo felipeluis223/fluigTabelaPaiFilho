@@ -99,30 +99,3 @@ function definirGerentesLoja(loja) {
         }
     }
 }
-
-// Busca os dados do fornecedor no dataset
-function buscarDadosFornecedor() {
-    const codigo = $("#fornecedor").val();
-    const c1 = DatasetFactory.createConstraint("FORNECEDOR", codigo, codigo, ConstraintType.MUST);
-    const ds = DatasetFactory.getDataset("ds_entregas", null, [c1], null);
-
-    if (ds?.values?.length > 0) {
-        const f = ds.values[0];
-        $("#fornecedor").val(f.FORNECEDOR || "");
-        $("#natureza").val(f.NATUREZA || "");
-        $("#valor").val(f.VALOR || "");
-        $("#vencimento").val(f.VENCIMENTO || "");
-    } else {
-        resetarCamposFornecedor();
-        FLUIGC.toast({
-            title: "Sem cadastro.",
-            message: "Fornecedor não encontrado.",
-            type: "info"
-        });
-    }
-}
-
-// Limpa os campos de fornecedor
-function resetarCamposFornecedor() {
-    $("#fornecedor, #natureza, #valor, #vencimento").val("");
-}
