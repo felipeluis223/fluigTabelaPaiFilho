@@ -2,6 +2,8 @@
 
 Este repositório contém um modelo funcional de formulário ECM para o **Fluig**, desenvolvido para registrar despesas de entrega por loja. O objetivo é fornecer uma base reutilizável com cálculos automáticos, tabela dinâmica e integração com datasets internos.
 
+
+
 ---
 
 ## 🧠 Objetivo
